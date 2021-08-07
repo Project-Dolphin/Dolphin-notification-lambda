@@ -1,0 +1,36 @@
+service: dolphin-notification-lambda
+
+frameworkVersion: '2'
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  lambdaHashingVersion: 20201221
+
+
+plugins:
+  - serverless-plugin-typescript
+  - serverless-offline
+
+custom:
+  stages:
+    - prod
+    - dev
+  NODE_ENV:
+    prod: production
+    dev: development
+
+provider:
+  name: aws
+  runtime: nodejs12.x
+  stage: ${opt:stage, 'dev'}
+  region: ap-northeast-2
+  environment:
+    NODE_ENV: ${self:custom.NODE_ENV.${self:provider.stage}}
+    TZ: Asia/Seoul
+
+functions:
+  dolphin:
+    handler: src/handler.dolphin
+    events:
+      
